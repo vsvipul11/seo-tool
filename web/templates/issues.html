@@ -1,0 +1,180 @@
+{{ template "head" . }}
+
+{{ with .Data }}
+
+<div class="panel">
+
+	<div class="box box-first">
+		<div class="col col-main">
+			<div class="content">
+				<div>
+					<h2>Site Issues</h2>
+				</div>
+			</div>
+		</div>
+
+		<div class="col col-actions-l">
+			<div class="main-action">
+				<div class="content">
+					<a href="/dashboard?pid={{ .ProjectView.Project.Id }}">{{ .ProjectView.Project.Host }}</a>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+	{{ $pid := .ProjectView.Project.Id }}
+
+	<div class="box box-highlight">
+		<div class="col">
+			<div class="content" >
+				<h2>
+					{{ if ne .ProjectView.Crawl.CriticalIssues 0 }}
+						<a href="#critical" class="borderless">{{ .ProjectView.Crawl.CriticalIssues }} Critical Issues</a>
+					{{ else }}
+						{{ .ProjectView.Crawl.CriticalIssues }} Critical Issues
+					{{ end }}
+					
+				</h2>
+				<p>Critical errors affecting your ranking. Fix them first.</p>
+			</div>
+		</div>
+		
+		<div class="col">
+			<div class="content">
+				<h2>
+					{{ if ne .ProjectView.Crawl.AlertIssues 0 }}
+						<a href="#alert" class="borderless">{{ .ProjectView.Crawl.AlertIssues }} Alerts</a>
+					{{ else }}
+						{{ .ProjectView.Crawl.AlertIssues }} Alerts
+					{{ end }}
+				</h2>
+				<p>Issues that are holding your site back. Fix them next.</p>
+			</div>
+		</div>
+
+		<div class="col">
+			<div class="content">
+				<h2>
+					{{ if ne .ProjectView.Crawl.WarningIssues 0 }}
+						<a href="#warning" class="borderless">{{ .ProjectView.Crawl.WarningIssues }} Warnings</a>
+					{{ else }}
+						{{ .ProjectView.Crawl.WarningIssues }} Warnings
+					{{ end }}
+				</h2>
+				<p>Issues you may want to keep an eye on.</p>
+			</div>
+		</div>
+	</div>
+
+	{{ if and (eq .ProjectView.Crawl.CriticalIssues 0) (and (eq .ProjectView.Crawl.WarningIssues 0) (eq .ProjectView.Crawl.AlertIssues 0)) }}
+		<div class="box box-highlight">
+			<div class="col col-main ">
+				<div class="content aligned mint-intro">
+					Your site is <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.787 7.531c-5.107 2.785-12.72 9.177-15.787 15.469h2.939c.819-2.021 2.522-4.536 3.851-5.902 8.386 3.747 17.21-2.775 17.21-11.343 0-1.535-.302-3.136-.92-4.755-2.347 3.119-5.647 1.052-10.851 1.625-7.657.844-11.162 6.797-8.764 11.54 3.506-3.415 9.523-6.38 12.322-6.634z"/></svg> mint.
+					<p>SEOnaut didn't detect any issues on your site.</p>
+				</div>
+			</div>
+		</div>
+	{{ end }}
+
+	{{ if .IssueCount.CriticalIssues }}
+		{{ range .IssueCount.CriticalIssues }}
+			<a name="critical"></a>
+			<div class="box borderless">
+				<div class="col col-main">
+					<div class="content">
+						<h2>{{ trans .ErrorType }}</h2>
+						<p>{{ trans (print .ErrorType "_DESC") }}</p>
+					</div>
+				</div>
+
+				<div class="col col-actions">
+					<a href="/export/csv?pid={{ $pid }}&eid={{ .ErrorType }}">Download URLs</a>
+					<a href="/issues/view?pid={{ $pid }}&eid={{ .ErrorType }}" class="highlight">View URLs</a>
+				</div>
+			</div>
+
+			<div class="box box-highlight inverted always-row">
+				<div class="col col-s bg-alert">
+					<div class="content content-s">
+						CRITICAL
+					</div>
+				</div>
+				<div clas="col">
+					<div class="content content-s">
+						{{ .Count }} {{ if eq .Count 1 }}URL{{ else }}URLs{{end }}
+					</div>
+				</div>
+			</div>
+		{{ end }}
+	{{ end }}
+
+	{{ if .IssueCount.AlertIssues }}
+		{{ range .IssueCount.AlertIssues }}
+			<a name="alert"></a>
+			<div class="box borderless">
+				<div class="col col-main">
+					<div class="content">
+						<h2>{{ trans .ErrorType }}</h2>
+						<p>{{ trans (print .ErrorType "_DESC") }}</p>
+					</div>
+				</div>
+
+				<div class="col col-actions">
+					<a href="/export/csv?pid={{ $pid }}&eid={{ .ErrorType }}">Download URLs</a>
+					<a href="/issues/view?pid={{ $pid }}&eid={{ .ErrorType }}" class="highlight">View URLs</a>
+				</div>
+			</div>
+
+			<div class="box box-highlight inverted always-row" >
+				<div class="col col-s bg-alert">
+					<div class="content content-s">
+						ALERT
+					</div>
+				</div>
+				<div clas="col">
+					<div class="content content-s">
+						{{ .Count }} {{ if eq .Count 1 }}URL{{ else }}URLs{{end }}
+					</div>
+				</div>
+			</div>
+		{{ end }}
+	{{ end }}
+
+	{{ if .IssueCount.WarningIssues }}
+		{{ range .IssueCount.WarningIssues }}
+			<a name="warning"></a>
+			<div class="box borderless">
+				<div class="col col-main">
+					<div class="content">
+						<h2>{{ trans .ErrorType }}</h2>
+						<p>{{ trans (print .ErrorType "_DESC") }}</p>
+					</div>
+				</div>
+
+				<div class="col col-actions">
+					<a href="/export/csv?pid={{ $pid }}&eid={{ .ErrorType }}">Download URLs</a>
+					<a href="/issues/view?pid={{ $pid }}&eid={{ .ErrorType }}" class="highlight">View URLs</a>
+				</div>
+			</div>
+
+			<div class="box box-highlight inverted always-row">
+				<div class="col col-s bg-alert">
+					<div class="content content-s">
+						WARNING
+					</div>
+				</div>
+				<div clas="col">
+					<div class="content content-s">
+						{{ .Count }} {{ if eq .Count 1 }}URL{{ else }}URLs{{end }}
+					</div>
+				</div>
+			</div>
+		{{ end }}
+	{{ end }}
+
+</div>
+
+{{ end}}
+
+{{ template "footer" . }}

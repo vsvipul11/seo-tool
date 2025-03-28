@@ -1,0 +1,62 @@
+{
+  "family": "seonaut-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::689613779557:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "seonaut-db",
+      "image": "mysql:8.0",
+      "essential": true,
+      "environment": [
+        {"name": "MYSQL_ROOT_PASSWORD", "value": "root"},
+        {"name": "MYSQL_DATABASE", "value": "seonaut"},
+        {"name": "MYSQL_USER", "value": "seonaut"},
+        {"name": "MYSQL_PASSWORD", "value": "seonaut"}
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/seonaut-task",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "db"
+        }
+      }
+    },
+    {
+      "name": "seonaut-app",
+      "image": "689613779557.dkr.ecr.ap-south-1.amazonaws.com/seonaut:latest",
+      "essential": true,
+      "dependsOn": [
+        {
+          "containerName": "seonaut-db",
+          "condition": "START"
+        }
+      ],
+      "portMappings": [
+        {
+          "containerPort": 9000,
+          "hostPort": 9000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {"name": "WAIT_HOSTS", "value": "seonaut-db:3306"},
+        {"name": "WAIT_HOSTS_TIMEOUT", "value": "300"},
+        {"name": "WAIT_SLEEP_INTERVAL", "value": "30"},
+        {"name": "WAIT_HOST_CONNECT_TIMEOUT", "value": "30"},
+        {"name": "SEONAUT_PORT", "value": "9000"}
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/seonaut-task",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "app"
+        }
+      }
+    }
+  ]
+}

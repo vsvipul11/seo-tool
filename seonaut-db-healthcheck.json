@@ -1,0 +1,26 @@
+{
+  "name": "seonaut-db",
+  "image": "mysql:8.0",
+  "essential": true,
+  "healthCheck": {
+    "command": ["CMD-SHELL", "mysqladmin ping -h localhost -u root -proot || exit 1"],
+    "interval": 30,
+    "timeout": 5,
+    "retries": 3,
+    "startPeriod": 60
+  },
+  "environment": [
+    {"name": "MYSQL_ROOT_PASSWORD", "value": "root"},
+    {"name": "MYSQL_DATABASE", "value": "seonaut"},
+    {"name": "MYSQL_USER", "value": "seonaut"},
+    {"name": "MYSQL_PASSWORD", "value": "seonaut"}
+  ],
+  "logConfiguration": {
+    "logDriver": "awslogs",
+    "options": {
+      "awslogs-group": "/ecs/seonaut-task",
+      "awslogs-region": "ap-south-1",
+      "awslogs-stream-prefix": "db"
+    }
+  }
+}

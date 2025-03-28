@@ -1,0 +1,37 @@
+{
+    "family": "seonaut-task",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "512",
+    "memory": "1024",
+    "executionRoleArn": "arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+      {
+        "name": "seonaut-app",
+        "image": "$(aws sts get-caller-identity --query Account --output text).dkr.ecr.ap-south-1.amazonaws.com/seonaut:latest",
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 9000,
+            "hostPort": 9000,
+            "protocol": "tcp"
+          }
+        ],
+        "environment": [
+          {"name": "MYSQL_ROOT_PASSWORD", "value": "root"},
+          {"name": "MYSQL_DATABASE", "value": "seonaut"},
+          {"name": "MYSQL_USER", "value": "seonaut"},
+          {"name": "MYSQL_PASSWORD", "value": "seonaut"},
+          {"name": "SEONAUT_PORT", "value": "9000"}
+        ],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/seonaut-task",
+            "awslogs-region": "ap-south-1",
+            "awslogs-stream-prefix": "ecs"
+          }
+        }
+      }
+    ]
+  }

@@ -1,0 +1,1070 @@
+{{ template "head" . }}
+{{ with .Data }}
+<a name="menu"></a>
+
+{{ $parameters := printf "?pid=%d&rid=%d" .ProjectView.Project.Id .PageReportView.PageReport.Id }}
+
+<div class="panel">
+
+	<div class="box box-first">
+		<div class="col col-main">
+			<div class="content">
+				{{ if .Eid }}
+					<a href="/issues?pid={{ .ProjectView.Project.Id }}">Site Issues</a> 
+					/ 
+					<a href="/issues/view?pid={{ .ProjectView.Project.Id }}&eid={{ .Eid }}">{{ trans .Eid }}</a>
+					{{ $parameters = printf "%s&eid=%s" $parameters .Eid }}
+				{{ else if .Ep }}
+					<a href="/explorer?pid={{ .ProjectView.Project.Id }}">Page Details</a>
+					{{ $parameters = printf "%s&ep=%s" $parameters .Ep }}
+				{{ end }}
+
+				{{ $parameters = printf "%s&rid=%d" $parameters .PageReportView.PageReport.Id }}
+			</div>
+		</div>
+
+		<div class="col col-actions-l">
+			<div class="main-action">
+				<div class="content">
+					<a href="/dashboard?pid={{ .ProjectView.Project.Id }}">{{ .ProjectView.Project.Host }}</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="box box-highlight soft">
+		<div class="col col-main">
+			<div class="content">
+				<div class="url">
+					{{ if .PageReportView.PageReport.Title }}
+					{{ .PageReportView.PageReport.Title }} <br>
+					{{ end }}
+					{{ .PageReportView.PageReport.URL }}
+					<a class="borderless" href="{{ .PageReportView.PageReport.URL }}" target="_blank">↗</a>
+				</div>
+			 </div>
+		</div>
+
+		<div class="col">
+			<div class="content">
+
+				<details>
+					<summary>
+						{{ if eq .Tab "details" }} Details {{ end }}
+						{{ if eq .Tab "inlinks" }} Inlinks {{ end }}
+						{{ if eq .Tab "internal" }} Internal links {{ end }}
+						{{ if eq .Tab "external"}} External links {{ end }}
+						{{ if eq .Tab "redirections" }} Redirections {{ end }}
+						{{ if eq .Tab "images" }} Images {{ end }}
+						{{ if eq .Tab "audios" }} Audios {{ end }}
+						{{ if eq .Tab "videos" }} Videos {{ end }}
+						{{ if eq .Tab "iframes" }} Iframes {{ end }}
+						{{ if eq .Tab "scripts" }} Scripts {{ end }}
+						{{ if eq .Tab "styles" }} Styles {{ end }}
+					</summary>
+
+					<ul>
+						<li>
+							<a href="/resources{{ printf "%s&t=details" $parameters }}">Details</a>
+						</li>
+
+						<li>
+							<a href="/resources{{ printf "%s&t=inlinks" $parameters }}">Inlinks</a>
+						</li>
+
+						<li>
+							<a href="/resources{{ printf "%s&t=internal" $parameters }}">Internal links</a>
+						</li>
+
+						<li>
+							<a href="/resources{{ printf "%s&t=external" $parameters }}">External links</a>
+						</li>
+
+						<li>
+							<a href="/resources{{ printf "%s&t=redirections" $parameters }}">Redirections</a>
+						</li>
+
+						<li>
+							<a href="/resources{{ printf "%s&t=audios" $parameters }}">Audios</a>
+						</li>
+
+						<li>
+							<a href="/resources{{ printf "%s&t=videos" $parameters }}">Videos</a>
+						</li>
+
+						<li>
+							<a href="/resources{{ printf "%s&t=images" $parameters }}">Images</a>
+						</li>
+
+						<li>
+							<a href="/resources{{ printf "%s&t=iframes" $parameters }}">Iframes</a>
+						</li>
+
+						<li>
+							<a href="/resources{{ printf "%s&t=scripts" $parameters }}">Scripts</a>
+						</li>
+
+						<li>
+							<a href="/resources{{ printf "%s&t=styles" $parameters }}">Styles</a>
+						</li>
+					</ul>
+				</details>
+
+			</div>
+		</div>
+	</div>
+
+	{{ $cid := .ProjectView.Crawl.Id }}
+	{{ $pid := .ProjectView.Project.Id }}
+	{{ $crawlSitemap := .ProjectView.Project.CrawlSitemap }}
+	{{ $eid := .Eid }}
+	{{ $parameters = printf "%s&t=%s" $parameters .Tab }}
+
+	{{ if eq .Tab "details" }}
+		<div class="box box-highlight">
+			<div class="col col-main">
+				<div class="content">
+					General details about this URL.
+					{{ if .Archived }}
+					<br>This project is archived: <a href="/archive{{ $parameters }}">view archived response</a>.
+					{{ end }}
+				</div>
+			</div>
+		</div>
+
+		<!-- AI SEO Analysis Button Box -->
+		<div class="box box-highlight">
+			<div class="col col-main">
+				<div class="content">
+					<h3 style="color: #1c75bc; margin-top: 0; margin-bottom: 10px;">AI SEO Analysis</h3>
+					<p>Get AI-powered SEO recommendations to improve this page's performance.</p>
+					<button id="get-ai-suggestions" style="background-color: #1c75bc; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+						Generate SEO Recommendations
+					</button>
+					
+					<div id="ai-suggestions-loading" style="display: none; margin-top: 15px; align-items: center;">
+						<div style="width: 20px; height: 20px; border: 3px solid rgba(28, 117, 188, 0.2); border-top: 3px solid #1c75bc; border-radius: 50%; animation: ai-spinner 1s linear infinite; margin-right: 10px;"></div>
+						<span>Analyzing page and generating suggestions...</span>
+					</div>
+					
+					<div id="ai-suggestions-content" style="display: none; margin-top: 15px; padding: 15px; background-color: #f7f7f7; border-left: 4px solid #8dc63f; border-radius: 0 4px 4px 0;"></div>
+				</div>
+			</div>
+		</div>
+
+		<style>
+			@keyframes ai-spinner {
+				0% { transform: rotate(0deg); }
+				100% { transform: rotate(360deg); }
+			}
+			#ai-suggestions-content h3 {
+				color: #1c75bc;
+				margin-top: 0;
+				margin-bottom: 10px;
+			}
+			#ai-suggestions-content ul {
+				margin-left: 20px;
+				padding-left: 0;
+			}
+			#ai-suggestions-content li {
+				margin-bottom: 8px;
+			}
+			.ai-helper-example {
+				background-color: white;
+				padding: 10px;
+				margin: 10px 0;
+				border-left: 3px solid #8dc63f;
+				font-family: monospace;
+			}
+			.ai-helper-error {
+				color: #e74c3c;
+				padding: 10px;
+				background-color: #fde2e2;
+				border-left: 3px solid #e74c3c;
+			}
+		</style>
+
+		{{ $errorTypes := .PageReportView.ErrorTypes }}
+		{{ with .PageReportView.PageReport }}
+			<div>
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Status Code</b>
+						</div>
+					</div>
+					
+					<div class="col">
+						<div class="content">
+							{{ if .StatusCode }}{{ .StatusCode }}{{ else }}-{{ end }}
+						</div>
+					</div>
+				</div>
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Blocked</b>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="content">
+							{{ if .BlockedByRobotstxt }}Blocked{{ else }}Not blocked{{ end }} by robots.txt
+						</div>
+					</div>
+				</div>
+
+				{{ if $crawlSitemap }}
+					<div class="box soft">
+						<div class="col borderless">
+							<div class="content">
+								<b>Sitemap</b>
+							</div>
+						</div>
+
+						<div class="col">
+							<div class="content">
+								The URL {{ if .InSitemap }}is{{ else }}is not{{ end }} in the sitemap
+							</div>
+						</div>
+					</div>
+				{{ end }}
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Content Type</b>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="content">
+							{{ if .ContentType }}{{ .ContentType }}{{ else }}-{{ end }}
+						</div>
+					</div>
+				</div>
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Size</b>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="content">
+							{{ if .Size }}{{ to_kb .Size }}KB{{ else }} - {{ end }}
+						</div>
+					</div>
+				</div>
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Robots</b>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="content">
+							{{ if .Robots }}{{ .Robots }}{{ else }} - {{ end }}
+						</div>
+					</div>
+				</div>
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Redirect URL</b>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="content">
+							{{ if .RedirectURL }}{{ .RedirectURL }}{{ else }} - {{ end }}
+						</div>
+					</div>
+				</div>
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Refresh</b>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="content">
+							{{ if .Refresh }}{{ .Refresh }}{{ else }} - {{ end }}
+						</div>
+					</div>
+				</div>
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Canonical</b>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="content">
+							{{ if .Canonical }}{{ .Canonical }}{{ else }} - {{ end }}
+						</div>
+					</div>
+				</div>
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Language</b>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="content">
+							{{ if .Lang }}{{ .Lang }}{{ else }} - {{ end }}
+						</div>
+					</div>
+				</div>
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Hreflang</b>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="content">
+							{{ if .Hreflangs }}
+
+							<div>
+								<span>Language</span>
+								<span>URL</span>
+							</div>
+
+								{{ range .Hreflangs }}
+								<div>
+									<span>{{ if .Lang }}{{ .Lang }}{{ end }}</span>
+									<span>{{ .URL }}</span>
+								</div>
+								{{ end }}
+
+							{{ else }}
+								-
+							{{ end }}
+						</div>
+					</div>
+				</div>
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Title</b>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="content">
+							{{ if .Title }}{{ .Title }}{{ else }} - {{ end }}
+						</div>
+					</div>
+				</div>
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>Description</b>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="content">
+							{{ if .Description }}{{ .Description }}{{ else }} - {{ end }}
+						</div>
+					</div>
+				</div>
+
+				<div class="box soft">
+					<div class="col borderless">
+						<div class="content">
+							<b>H1</b>
+						</div>
+					</div>
+
+					<div class="col borderless">
+						<div class="content">
+							{{ if .H1 }}{{ .H1 }}{{ else }}-{{ end }}
+						</div>
+					</div>
+				</div>
+
+					<div class="box soft">
+						<div class="col borderless"><div class="content"><b>H2</b></div></div>
+						<div class="col borderless"><div class="content">
+							{{ if .H2 }}{{ .H2 }}{{ else }} - {{ end }}
+						</div></div>
+					</div>
+
+					<div class="box soft">
+						<div class="col borderless">
+							<div class="content">
+								<b>Words</b>
+							</div>
+						</div>
+
+						<div class="col borderless">
+							<div class="content">
+								{{ if .Words }}{{ .Words }}{{ else }} - {{ end }}
+							</div>
+						</div>
+					</div>
+
+					<div class="box soft">
+						<div class="col borderless">
+							<div class="content">
+								<b>Depth</b>
+							</div>
+						</div>
+
+						<div class="col borderless">
+							<div class="content">
+								{{ if .Depth }}{{ .Depth }}{{ else }} - {{ end }}
+							</div>
+						</div>
+					</div>
+
+					<div class="box soft">
+						<div class="col borderless">
+							<div class="content">
+								<b>TTFB</b>
+							</div>
+						</div>
+
+						<div class="col borderless">
+							<div class="content">
+								{{ if (gt .TTFB 0) }}{{ .TTFB }}ms{{ else }} - {{ end }}
+							</div>
+						</div>
+					</div>
+
+					<div class="box">
+						<div class="col borderless">
+							<div class="content">
+								<b>Issues</b>
+							</div>
+						</div>
+
+						<div class="col borderless">
+							<div class="content">
+								{{ if $errorTypes }}
+								<ul>
+									{{ range $errorTypes }}
+										<li>
+											<a href="/issues/view?pid={{ $pid }}&eid={{ . }}">{{ trans . }}</a>
+										</li>
+									{{ end }}
+								</ul>
+								{{ else }}
+									-
+								{{ end }}
+							</div>
+						</div>
+
+					</div>
+				</div>
+			{{ end }}
+	{{ end }}
+
+	{{ if eq .Tab "inlinks" }}
+		<div class="box box-highlight">
+			<div class="col col-main">
+				<div class="content">
+					Inlinks are links to this URL from other pages on this website.
+				</div>
+			</div>
+		</div>
+		{{ if .PageReportView.InLinks }}
+			{{ range .PageReportView.InLinks }}
+				<div class="box">
+					<div class="col col-main">
+						<div class="content">
+							{{ if .Link.Text }}{{ .Link.Text }}<br/>{{ end }}
+							{{ if .PageReport.Title }}{{ .PageReport.Title }}<br/>{{ end }}
+							<a href="/resources?pid={{ $pid }}&rid={{ .PageReport.Id }}&ep=1" class="url">
+								{{ .PageReport.URL }}
+							</a>
+							{{ if .Link.NoFollow }}<p><span class="alert">nofollow</span></p>{{ end }}
+						</div>
+					</div>
+
+					<div class="col col-actions">
+						<a href="/resources?pid={{ $pid }}&rid={{ .PageReport.Id }}&ep=1" class="highlight">
+							View details
+						</a>
+					</div>
+				</div>
+				{{ end }}
+			{{ else }}
+				<div class="box"><div class="content">There are no links to this page.</div></div>
+			{{ end }}
+
+		<div class="box pagination">
+			<div class="col prev">
+				<div class="content">
+					{{ if (gt .PageReportView.Paginator.CurrentPage 1) }}
+					<a href="/resources{{ printf "%s&p=%d" $parameters .PageReportView.Paginator.PreviousPage }}">← prev</a>
+					{{ else }}
+						← prev
+					{{ end }}
+				</div>
+			</div>
+
+			<div class="col">
+				<div class="content aligned">
+					{{ .PageReportView.Paginator.CurrentPage }}/{{ .PageReportView.Paginator.TotalPages }}
+				</div>
+			</div>
+
+			<div class="col next">
+				<div class="content">
+					{{ if (gt .PageReportView.Paginator.TotalPages .PageReportView.Paginator.CurrentPage) }}
+						<a href="/resources{{ printf "%s&p=%d" $parameters .PageReportView.Paginator.NextPage }}">next →</a>
+					{{ else }}
+						next →
+					{{ end }}
+				</div>	
+			</div>
+		</div>
+	{{ end }}
+
+	{{ if eq .Tab "redirections" }}
+		<div class="box box-highlight">
+			<div class="col col-main">
+				<div class="content">
+					Redirections are the URLs from this website that are redirected to this URL.
+				</div>
+			</div>
+		</div>
+		{{ if .PageReportView.Redirects }}
+			{{ range .PageReportView.Redirects }}
+				<div class="box">
+					<div class="col col-main">
+						<div class="content">
+						{{ if .Title }}{{ .Title }}<br/>{{ end }}
+							<a href="/resources?pid={{ $pid }}&rid={{ .Id }}&ep=1" class="url">{{ .URL }}</a>
+						</div>
+					</div>
+
+					<div class="col col-actions">
+						<a href="/resources?pid={{ $pid }}&rid={{ .Id }}&ep=1">View Details</a>
+					</div>
+				</div>
+			{{ end }}
+		{{ else }}
+			<div class="box">
+				<div class="content">There are no redirects to this page.</div>
+			</div>
+		{{ end }}
+		
+		<div class="box pagination">
+			<div class="col prev">
+				<div class="content">
+					{{ if (gt .PageReportView.Paginator.CurrentPage 1) }}
+					<a href="/resources?{{ printf "%s&p=%d" $parameters .PageReportView.Paginator.PreviousPage }}">← prev</a>
+					{{ else }}
+						← prev
+					{{ end }}
+				</div>
+			</div>
+
+			<div class="col"><div class="content aligned">{{ .PageReportView.Paginator.CurrentPage }}/{{ .PageReportView.Paginator.TotalPages }}</div></div>
+
+			<div class="col next">
+				<div class="content">
+					{{ if (gt .PageReportView.Paginator.TotalPages .PageReportView.Paginator.CurrentPage) }}
+						<a href="/resources{{ printf "%s&p=%d" $parameters .PageReportView.Paginator.NextPage }}">next →</a>
+					{{ else }}
+						next →
+					{{ end }}
+				</div>
+			</div>
+		</div>
+	{{ end }}
+
+	{{ if eq .Tab "internal" }}
+		<div class="box box-highlight">
+			<div class="col col-main">
+				<div class="content">
+					Internal links are the links found in this URL's HTML code that point to other pages on this website.
+				</div>
+			</div>
+		</div>
+		{{ if .PageReportView.PageReport.InternalLinks }}
+				{{ range .PageReportView.PageReport.InternalLinks }}
+					<div class="box">
+						<div class="col col-main">
+							<div class="content">
+							{{ if .Link.Text }}{{ .Link.Text }}<br/>{{ end }}
+							{{ if .PageReport.Title }}{{ .PageReport.Title }}<br/>{{ end }}
+							<a href="/resources?pid={{ $pid }}&rid={{ .PageReport.Id }}&ep=1" class="url">
+								{{ .Link.URL }}
+							</a>
+							{{ if .Link.NoFollow }}<br><span class="alert">nofollow</span>{{ end }}
+							</div>
+						</div>
+
+						{{ if .PageReport.Crawled }}
+						<div class="col col-actions">
+							<a href="/resources?pid={{ $pid }}&rid={{ .PageReport.Id }}&ep=1" class="highlight">
+								View details
+							</a>
+						</div>
+						{{ end }}
+					</div>
+				{{ end }}
+		{{ else }}
+			<div class="box">
+				<div class="content">
+					There are no internal links in this page.
+				</div>
+			</div>
+		{{ end }}
+		
+		<div class="box pagination">
+			<div class="col prev">
+				<div class="content">
+					{{ if (gt .PageReportView.Paginator.CurrentPage 1) }}
+						<a href="/resources{{ printf "%s&p=%d" $parameters .PageReportView.Paginator.PreviousPage }}">← prev</a>
+					{{ else }}
+						← prev
+					{{ end }}
+				</div>
+			</div>
+
+			<div class="col">
+				<div class="content aligned">
+					{{ .PageReportView.Paginator.CurrentPage }}/{{ .PageReportView.Paginator.TotalPages }}
+				</div>
+			</div>
+
+			<div class="col next">
+				<div class="content">
+					{{ if (gt .PageReportView.Paginator.TotalPages .PageReportView.Paginator.CurrentPage) }}
+						<a href="/resources{{ printf "%s&p=%d" $parameters .PageReportView.Paginator.NextPage }}">next →</a>
+					{{ else }}
+						next →
+					{{ end }}
+				</div>
+			</div>
+		</div>
+	{{ end }}
+
+	{{ if eq .Tab "external" }}
+		<div class="box box-highlight">
+			<div class="col col-main">
+				<div class="content">
+					External links are the links found in this URL's HTML code pointing to other websites.
+				</div>
+			</div>
+		</div>
+		{{ if .PageReportView.PageReport.ExternalLinks }}
+			{{ range .PageReportView.PageReport.ExternalLinks }}
+					<div class="box">
+						<div class="col col-main">
+							<div class="content">
+								{{ if .Text }}{{ .Text }} <br> {{ end }}
+								<span class="url">{{ .URL }}</span>
+								{{ if not .NoFollow }}<br><span class="alert">follow</span>{{ end }}
+								{{ if .Sponsored }}<span class="alert"><small>sponsored</small></span>{{ end }}
+								{{ if .UGC }}<span class="alert"><small>ugc</small></span>{{ end }}
+								{{ if gt .StatusCode 299 }}<span class="alert"><small>Status Code {{ .StatusCode }}</small></span>{{ end }}
+								{{ if lt .StatusCode 0 }}<span class="alert"><small>Broken Link</small></span>{{ end }}
+							</div>
+						</div>
+					</div>
+				{{ end }}
+			{{ else }}
+				<div class="box"><div class="content">There are no external links in this page.</div></div>
+			{{ end }}
+		
+		<div class="box pagination">
+			<div class="col prev">
+				<div class="content">
+					{{ if (gt .PageReportView.Paginator.CurrentPage 1) }}
+					<a href="/resources{{ printf "%s&p=%d" $parameters .PageReportView.Paginator.PreviousPage }}">← prev</a>
+					{{ else }}
+						← prev
+					{{ end }}
+				</div>
+			</div>
+
+			<div class="col"><div class="content aligned">{{ .PageReportView.Paginator.CurrentPage }}/{{ .PageReportView.Paginator.TotalPages }}</div></div>
+
+			<div class="col next">
+				<div class="content">
+					{{ if (gt .PageReportView.Paginator.TotalPages .PageReportView.Paginator.CurrentPage) }}
+					<a href="/resources{{ printf "%s&p=%d" $parameters .PageReportView.Paginator.NextPage }}">next →</a>
+					{{ else }}
+						next →
+					{{ end }}
+				</div>
+			</div>
+		</div>
+	{{ end }}
+
+	{{ if eq .Tab "images" }}
+		<div class="box box-highlight">
+			<div class="col col-main">
+				<div class="content">
+					Images that are found in this URL's HTML code. Note that images shown using CSS are not included here.
+				</div>
+			</div>
+		</div>
+		{{ if .PageReportView.PageReport.Images }}
+			{{ range .PageReportView.PageReport.Images }}
+				<div class="box">
+					<div class="col col-main">
+						<div class="content">
+							{{ if .Alt}}{{ .Alt }}<br>{{ end }}
+							<span class="url">{{ .URL }}</span>
+							{{ if not .Alt}}<br><span class="alert">No alt attribute</span>{{ end }}
+						</div>
+					</div>
+				</div>
+				{{ end }}
+			{{ else }}
+				<div class="box"><div class="content aligned">There are no images in this page.</div></div>
+			{{ end }}
+	{{ end }}
+
+	{{ if eq .Tab "iframes" }}
+		<div class="box box-highlight">
+			<div class="col col-main">
+				<div class="content">
+					Iframes that are found in this URL's HTML code.
+				</div>
+			</div>
+		</div>
+		{{ if .PageReportView.PageReport.Iframes }}
+			{{ range .PageReportView.PageReport.Iframes }}
+				<div class="box">
+					<div class="col col-main">
+						<div class="content">
+							<span class="url">{{ . }}</span>
+						</div>
+					</div>
+				</div>
+				{{ end }}
+			{{ else }}
+				<div class="box"><div class="content aligned">There are no iframes in this page.</div></div>
+			{{ end }}
+	{{ end }}
+
+	{{ if eq .Tab "audios" }}
+		<div class="box box-highlight">
+			<div class="col col-main">
+				<div class="content">
+					Audio files that are found in this URL's HTML code.
+				</div>
+			</div>
+		</div>
+		{{ if .PageReportView.PageReport.Audios }}
+			{{ range .PageReportView.PageReport.Audios }}
+				<div class="box">
+					<div class="col col-main">
+						<div class="content">
+							<span class="url">{{ . }}</span>
+						</div>
+					</div>
+				</div>
+				{{ end }}
+			{{ else }}
+				<div class="box"><div class="content aligned">There are no audios in this page.</div></div>
+			{{ end }}
+	{{ end }}
+
+	{{ if eq .Tab "videos" }}
+		<div class="box box-highlight">
+			<div class="col col-main">
+				<div class="content">
+					Video files that are found in this URL's HTML code.
+				</div>
+			</div>
+		</div>
+		{{ if .PageReportView.PageReport.Videos }}
+			{{ range .PageReportView.PageReport.Videos }}
+				<div class="box">
+					<div class="col col-main">
+						<div class="content">
+							<span class="url">{{ .URL }}</span><br>
+							<small>Poster: {{ if (.Poster) }} {{.Poster }} {{ else }} - {{ end }}</small>
+						</div>
+					</div>
+				</div>
+			{{ end }}
+		{{ else }}
+			<div class="box"><div class="content aligned">There are no videos in this page.</div></div>
+			{{ end }}
+	{{ end }}
+
+	{{ if eq .Tab "scripts" }}
+		<div class="box box-highlight">
+			<div class="col col-main">
+				<div class="content">
+					Script files that are found in this URL's code.
+				</div>
+			</div>
+		</div>
+		{{ if .PageReportView.PageReport.Scripts }}
+			{{ range .PageReportView.PageReport.Scripts }}
+				<div class="box">
+					<div class="col col-main">
+						<div class="content">
+							<span class="url">{{ . }}</span>
+						</div>
+					</div>
+				</div>		
+				{{ end }}
+			{{ else }}
+				<div class="box"><div class="content aligned">There are no scripts in this page.</div></div>
+			{{ end }}
+	{{ end }}
+	
+	{{ if eq .Tab "styles" }}
+	<div class="box box-highlight">
+		<div class="col col-main">
+			<div class="content">
+				CSS files that are found in this URL's HTML code.
+			</div>
+		</div>
+	</div>
+		{{ if .PageReportView.PageReport.Styles }}
+			{{ range .PageReportView.PageReport.Styles }}
+				<div class="box">
+					<div class="col col-main">
+						<div class="content">
+							<span class="url">{{ . }}</span>
+						</div>
+					</div>
+				</div>
+			{{ end }}
+		{{ else }}
+			<div class="box"><div class="content aligned">There are no styles in this page.</div></div>
+		{{ end }}
+	{{ end }}
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const suggestionsButton = document.getElementById('get-ai-suggestions');
+  const loadingElement = document.getElementById('ai-suggestions-loading');
+  const contentElement = document.getElementById('ai-suggestions-content');
+  
+  if (suggestionsButton) {
+    suggestionsButton.addEventListener('click', function() {
+      handleGetSuggestions();
+    });
+  }
+  
+  async function handleGetSuggestions() {
+    try {
+      // Show loading indicator
+      loadingElement.style.display = 'flex';
+      contentElement.style.display = 'none';
+      
+      // Collect page data
+      const pageData = collectPageData();
+      console.log("Collected page data:", pageData);
+      
+      // Get suggestions from OpenRouter
+      const suggestions = await fetchSuggestions(pageData);
+      
+      // Display suggestions
+      contentElement.innerHTML = suggestions;
+      contentElement.style.display = 'block';
+    } catch (error) {
+      console.error('Error getting AI suggestions:', error);
+      contentElement.innerHTML = `
+        <div class="ai-helper-error">
+          <h3>Error getting suggestions</h3>
+          <p>${error.message || 'An unexpected error occurred.'}</p>
+          <p>Please try again later.</p>
+        </div>
+      `;
+      contentElement.style.display = 'block';
+    } finally {
+      // Hide loading indicator
+      loadingElement.style.display = 'none';
+    }
+  }
+
+  function collectPageData() {
+    const pageData = {
+      url: '',
+      title: '',
+      description: '',
+      h1: '',
+      h2: '',
+      robots: '',
+      canonical: '',
+      statusCode: '',
+      contentType: '',
+      wordCount: '',
+      issues: []
+    };
+    
+    // Get URL and title from the URL element
+    const urlElement = document.querySelector('.url');
+    if (urlElement) {
+      // Get URL - remove the arrow character if present
+      const urlText = urlElement.textContent.replace('↗', '').trim();
+      pageData.url = urlText;
+      
+      // Extract title from the URL element if it contains a <br>
+      const urlHTML = urlElement.innerHTML;
+      if (urlHTML.includes('<br>')) {
+        const parts = urlHTML.split('<br>');
+        if (parts.length > 0) {
+          pageData.title = parts[0].trim();
+        }
+      }
+    }
+    
+    // Get data from all boxes with a label and value
+    const allBoxes = document.querySelectorAll('.box.soft');
+    
+    allBoxes.forEach(box => {
+      // Find the label (b element)
+      const label = box.querySelector('b');
+      if (!label) return;
+      
+      // Get the label text
+      const labelText = label.textContent.trim();
+      
+      // Find the content div that's not the one containing the label
+      let valueElement;
+      const columns = box.querySelectorAll('.col');
+      if (columns.length > 1) {
+        valueElement = columns[1].querySelector('.content');
+      }
+      
+      if (!valueElement) return;
+      
+      // Get the value
+      const value = valueElement.textContent.trim();
+      if (value === '-') return; // Skip empty values
+      
+      // Map to our pageData object
+      switch (labelText) {
+        case 'Status Code': pageData.statusCode = value; break;
+        case 'Content Type': pageData.contentType = value; break;
+        case 'Title': pageData.title = value; break;
+        case 'Description': pageData.description = value; break;
+        case 'H1': pageData.h1 = value; break;
+        case 'H2': pageData.h2 = value; break;
+        case 'Robots': pageData.robots = value; break;
+        case 'Canonical': pageData.canonical = value; break;
+        case 'Words': pageData.wordCount = value; break;
+      }
+    });
+    
+    // Get issues - more reliable approach
+    const issuesList = [];
+    const allLabels = document.querySelectorAll('b');
+    
+    // Find the Issues label
+    for (let i = 0; i < allLabels.length; i++) {
+      if (allLabels[i].textContent.trim() === 'Issues') {
+        // Found the Issues section, now find the nearest ul
+        let currentElement = allLabels[i];
+        while (currentElement) {
+          const ul = currentElement.parentElement.querySelector('ul');
+          if (ul) {
+            // Found the list, extract issues
+            const items = ul.querySelectorAll('li');
+            items.forEach(item => {
+              const text = item.textContent.trim();
+              if (text) {
+                issuesList.push(text);
+              }
+            });
+            break;
+          }
+          currentElement = currentElement.parentElement;
+          if (!currentElement || currentElement.tagName === 'BODY') break;
+        }
+        break;
+      }
+    }
+    
+    pageData.issues = issuesList;
+    return pageData;
+  }
+
+  async function fetchSuggestions(pageData) {
+    const apiKey = "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";
+    const baseUrl = "https://openrouter.ai/api/v1/chat/completions";
+    const model = "openai/gpt-4o";
+    
+    try {
+      console.log("Sending request to OpenRouter...");
+      
+      const response = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': window.location.origin,
+          'X-Title': 'Cadabams SEO Tool'
+        },
+        body: JSON.stringify({
+          model: model,
+          messages: [
+            {
+              role: "system",
+              content: `You are an SEO expert assistant for Cadabams SEO Tool. Your job is to analyze SEO data and provide specific, actionable recommendations to improve website SEO. 
+
+Focus on practical fixes for issues detected, and provide examples where appropriate. If elements like H1, meta descriptions, etc. are missing, suggest appropriate ones based on the page content and URL.
+              
+Format your response in HTML for direct display in the UI, using semantic HTML tags. Use h3 for section titles, ul/li for lists, and div with class="ai-helper-example" for code examples.`
+            },
+            {
+              role: "user",
+              content: `Here is the SEO data for a webpage:
+${JSON.stringify(pageData, null, 2)}
+
+Based on this data, please provide:
+1. A list of SEO issues identified
+2. Specific recommendations to fix each issue
+3. Examples of good H1, meta descriptions, titles, etc. when those are missing or need improvement
+4. Any additional optimization opportunities
+
+Make your suggestions specific and actionable.`
+            }
+          ]
+        })
+      });
+      
+      console.log("Response received:", response.status);
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log("OpenRouter response:", data);
+      
+      return data.choices[0].message.content;
+      
+    } catch (error) {
+      console.error('Error fetching from OpenRouter:', error);
+      throw error;
+    }
+  }
+});
+</script>
+{{ end }}
