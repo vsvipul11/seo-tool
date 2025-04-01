@@ -151,8 +151,9 @@
 
 		addMsg("Connecting to the server, please wait...")
 
-		const protocol = {{ if .Data.Secure }}"wss://" {{ else }}"ws://"{{ end }}
-		let conn = new WebSocket(protocol + document.location.host + "/crawl/ws?pid={{ .Data.Project.Id }}")
+	// Replace the existing WebSocket connection code with this:
+const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+let conn = new WebSocket(protocol + document.location.host + "/crawl/ws?pid={{ .Data.Project.Id }}")
 
 		conn.onclose = evt => {
 			conn = null
