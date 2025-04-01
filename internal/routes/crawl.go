@@ -252,7 +252,10 @@ func (h *crawlHandler) wsHandler(w http.ResponseWriter, r *http.Request) {
 		WriteBufferSize: 1024,
 		CheckOrigin: func(r *http.Request) bool {
 			origin := r.Header.Get("Origin")
-			return origin == h.Config.HTTPServer.URL
+			return origin == "https://seo.mindtalkbuddy.com" || 
+               strings.HasPrefix(origin, "https://seo.mindtalkbuddy.com") ||
+               // For development
+               strings.HasPrefix(origin, "http://localhost")
 		},
 	}
 
