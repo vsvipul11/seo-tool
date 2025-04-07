@@ -1006,7 +1006,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function fetchSuggestions(pageData) {
-    const apiKey = "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";
+    const apiKey = "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";
     const baseUrl = "https://openrouter.ai/api/v1/chat/completions";
     const model = "openai/gpt-4o";
     
@@ -1026,10 +1026,39 @@ document.addEventListener('DOMContentLoaded', function() {
           messages: [
             {
               role: "system",
-              content: `You are an SEO expert assistant for Cadabams SEO Tool. Your job is to analyze SEO data and provide specific, actionable recommendations to improve website SEO. 
+              content: `You are an expert SEO consultant for Cadabams SEO Tool. Your job is to analyze webpage data and provide comprehensive, actionable SEO recommendations.
 
-Focus on practical fixes for issues detected, and provide examples where appropriate. If elements like H1, meta descriptions, etc. are missing, suggest appropriate ones based on the page content and URL.
-              
+Provide a thorough SEO analysis that includes:
+
+1. Overall SEO Score (on a scale of 1-100)
+2. Technical SEO Assessment
+   - Issues with status codes, robots.txt, canonical tags
+   - Page loading speed concerns
+   - Mobile-friendliness indicators
+   - Schema markup opportunities
+
+3. Content Analysis
+   - Primary keyword identification and suggestions based on the URL and content
+   - Secondary/related keywords recommendations (at least 5)
+   - Content quality assessment (length, depth, uniqueness)
+   - Content structure evaluation (headings, paragraphs, bullet points)
+
+4. On-page SEO Elements
+   - Title tag optimization (include specific examples)
+   - Meta description improvements (include specific examples)
+   - H1, H2 heading structure recommendations (include specific examples)
+   - URL structure assessment
+   - Internal linking opportunities
+
+5. User Experience Factors
+   - Readability assessment
+   - Content engagement potential
+   - Call-to-action effectiveness
+
+6. Specific Implementation Examples
+   - Provide code examples for title, meta description, headings
+   - Suggest content improvements with before/after examples
+   
 Format your response in HTML for direct display in the UI, using semantic HTML tags. Use h3 for section titles, ul/li for lists, and div with class="ai-helper-example" for code examples.`
             },
             {
@@ -1037,13 +1066,7 @@ Format your response in HTML for direct display in the UI, using semantic HTML t
               content: `Here is the SEO data for a webpage:
 ${JSON.stringify(pageData, null, 2)}
 
-Based on this data, please provide:
-1. A list of SEO issues identified
-2. Specific recommendations to fix each issue
-3. Examples of good H1, meta descriptions, titles, etc. when those are missing or need improvement
-4. Any additional optimization opportunities
-
-Make your suggestions specific and actionable.`
+Based on this data, please provide a comprehensive SEO analysis with specific recommendations as outlined in your instructions. Include examples of improved title tags, meta descriptions, and H1 headings that incorporate the suggested primary and secondary keywords. Make your suggestions specific, actionable, and relevant to this particular page.`
             }
           ]
         })
