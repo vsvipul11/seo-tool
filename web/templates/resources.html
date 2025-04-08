@@ -848,7 +848,7 @@
 	
 	{{ if eq .Tab "styles" }}
 	<div class="box box-highlight">
-		<div class="col col-main">
+		<div class="col-main">
 			<div class="content">
 				CSS files that are found in this URL's HTML code.
 			</div>
@@ -899,11 +899,6 @@ document.addEventListener('DOMContentLoaded', function() {
       pageData.secondaryTag = secondaryTagInput.value.trim();
       
       console.log("Collected page data:", pageData);
-      
-      // Validate inputs
-      if (!pageData.primaryTag) {
-        throw new Error('Please enter a primary keyword/tag');
-      }
       
       // Get suggestions from Gemini API
       const suggestions = await fetchGeminiSuggestions(pageData);
@@ -1038,48 +1033,115 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       console.log("Sending request to Gemini API...");
       
-      // Create the prompt for Gemini
-      const systemPrompt = `You are an expert SEO consultant. Your job is to analyze webpage data and provide comprehensive, actionable SEO recommendations based on specific keywords/tags provided by the user.
+      // Create the prompt for Gemini based on whether keywords are provided
+      let systemPrompt = '';
+      let userPrompt = '';
+      
+      const hasKeywords = pageData.primaryTag && pageData.primaryTag.length > 0;
+      
+      if (hasKeywords) {
+        systemPrompt = `You are an expert SEO consultant. Your job is to analyze webpage data and provide comprehensive, actionable SEO recommendations focused on two main areas:
+
+1. Optimization for the user-provided keywords
+2. Fixing all issues identified in the page analysis
 
 Provide a thorough SEO analysis that includes:
 
-1. Overall SEO Score (on a scale of 1-100) with regard to the target keywords
-2. Keyword Alignment Assessment
+1. Overall SEO Score (on a scale of 1-100)
+
+2. Keyword Optimization Analysis
    - How well the primary and secondary keywords are integrated into the content
    - Keyword density analysis
    - Semantic relevance of content to target keywords
-   - Missing keyword opportunities
+   - Missing keyword opportunities in title, meta descriptions, headings, and content
+   - Specific suggestions for better keyword incorporation
 
-3. Technical SEO Assessment
-   - Issues with status codes, robots.txt, canonical tags
-   - Schema markup opportunities for the target keywords
+3. SEO Issues Analysis
+   - Full analysis of all technical SEO issues identified in the page
+   - Assessment of missing elements (title, meta description, H1, etc.)
+   - Problems with status codes, robots.txt, canonical tags
+   - Image optimization issues (missing alt text, large file sizes)
+   - Schema markup opportunities
 
-4. On-page SEO Elements
+4. On-page SEO Recommendations
    - Title tag optimization with the target keywords (include specific examples)
-   - Meta description improvements with the target keywords (include specific examples)
-   - H1, H2 heading structure recommendations incorporating keywords (include specific examples)
-   - URL structure assessment for keyword presence
-   - Internal linking opportunities related to the keywords
+   - Meta description improvements (include specific examples)
+   - H1, H2 heading structure recommendations
+   - URL structure assessment and recommendations
+   - Internal linking improvement suggestions
 
-5. Content Analysis
-   - Content quality assessment (length, depth, relevance to keywords)
-   - Content structure evaluation (headings, paragraphs)
-   - Content gap analysis related to the keywords
-   - Additional related keywords recommendations (at least 5)
+5. Content Quality Assessment
+   - Content length evaluation (too short/long)
+   - Readability analysis
+   - Content structure recommendations
+   - Content gap analysis related to the target topics
+   - Additional related keywords suggestions (at least 5)
 
-6. Specific Implementation Examples
-   - Before/After examples for title, meta descriptions, headings with keywords properly integrated
-   - Content improvement suggestions with the keywords naturally incorporated
+6. Implementation Examples
+   - Before/After examples for title, meta descriptions, and headings
+   - Specific HTML fixes for critical issues
+   - Content improvement suggestions
 
 Format your response in HTML for direct display in the UI, using semantic HTML tags. Use h3 for section titles, ul/li for lists, and div with class="ai-helper-example" for code examples.`;
 
-      const userPrompt = `Here is the SEO data for a webpage:
+        userPrompt = `Here is the SEO data for a webpage:
 ${JSON.stringify(pageData, null, 2)}
 
 Primary Keyword/Tag: ${pageData.primaryTag}
 Secondary Keyword/Tag: ${pageData.secondaryTag || "(Not specified)"}
 
-Based on this data, please provide a comprehensive SEO analysis with specific recommendations focused on optimizing the page for these keywords. Include examples of improved title tags, meta descriptions, and H1 headings that incorporate the primary and secondary keywords. Make your suggestions specific, actionable, and relevant to this particular page.`;
+Based on this data, please provide a comprehensive SEO analysis with:
+1. Specific recommendations focused on optimizing the page for these keywords
+2. Analysis and fixes for all SEO issues identified on the page
+3. Implementation examples including before/after comparisons
+
+Make your suggestions specific, actionable, and relevant to this particular page.`;
+      } else {
+        // Standard SEO analysis without specific keywords
+        systemPrompt = `You are an expert SEO consultant. Your job is to analyze webpage data and provide comprehensive, actionable SEO recommendations.
+
+Provide a thorough SEO analysis that includes:
+
+1. Overall SEO Score (on a scale of 1-100)
+
+2. Technical SEO Assessment
+   - Issues with status codes, robots.txt, canonical tags
+   - Page loading speed concerns
+   - Mobile-friendliness indicators
+   - Schema markup opportunities
+
+3. On-page SEO Elements
+   - Title tag optimization (include specific examples)
+   - Meta description improvements (include specific examples)
+   - H1, H2 heading structure recommendations
+   - URL structure assessment
+   - Internal linking opportunities
+
+4. Content Analysis
+   - Primary keyword identification and suggestions based on the URL and content
+   - Secondary/related keywords recommendations (at least 5)
+   - Content quality assessment (length, depth, uniqueness)
+   - Content structure evaluation
+
+5. User Experience Factors
+   - Readability assessment
+   - Content engagement potential
+   - Call-to-action effectiveness
+
+6. Implementation Examples
+   - Before/After examples for title, meta descriptions, and headings
+   - Specific HTML fixes for critical issues
+   - Content improvement suggestions
+
+Format your response in HTML for direct display in the UI, using semantic HTML tags. Use h3 for section titles, ul/li for lists, and div with class="ai-helper-example" for code examples.`;
+
+        userPrompt = `Here is the SEO data for a webpage:
+${JSON.stringify(pageData, null, 2)}
+
+Based on this data, please provide a comprehensive SEO analysis with specific recommendations for improving this page's SEO performance. Include examples of improved title tags, meta descriptions, and address all issues identified in the analysis.
+
+Make your suggestions specific, actionable, and relevant to this particular page.`;
+      }
 
       // Make the API request to Gemini
       const response = await fetch(`${baseUrl}?key=${apiKey}`, {
