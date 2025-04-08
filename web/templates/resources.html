@@ -138,6 +138,19 @@
 				<div class="content">
 					<h3 style="color: #1c75bc; margin-top: 0; margin-bottom: 10px;">AI SEO Analysis</h3>
 					<p>Get AI-powered SEO recommendations to improve this page's performance.</p>
+					
+					<div style="margin-bottom: 15px;">
+						<div style="margin-bottom: 10px;">
+							<label for="primary-tag" style="display: block; margin-bottom: 5px; font-weight: bold;">Primary Keyword/Tag:</label>
+							<input type="text" id="primary-tag" placeholder="Enter primary keyword" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+						</div>
+						
+						<div style="margin-bottom: 10px;">
+							<label for="secondary-tag" style="display: block; margin-bottom: 5px; font-weight: bold;">Secondary Keyword/Tag:</label>
+							<input type="text" id="secondary-tag" placeholder="Enter secondary keyword" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+						</div>
+					</div>
+					
 					<button id="get-ai-suggestions" style="background-color: #1c75bc; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
 						Generate SEO Recommendations
 					</button>
@@ -863,6 +876,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const suggestionsButton = document.getElementById('get-ai-suggestions');
   const loadingElement = document.getElementById('ai-suggestions-loading');
   const contentElement = document.getElementById('ai-suggestions-content');
+  const primaryTagInput = document.getElementById('primary-tag');
+  const secondaryTagInput = document.getElementById('secondary-tag');
   
   if (suggestionsButton) {
     suggestionsButton.addEventListener('click', function() {
@@ -878,7 +893,17 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Collect page data
       const pageData = collectPageData();
+      
+      // Get user-entered tags
+      pageData.primaryTag = primaryTagInput.value.trim();
+      pageData.secondaryTag = secondaryTagInput.value.trim();
+      
       console.log("Collected page data:", pageData);
+      
+      // Validate inputs
+      if (!pageData.primaryTag) {
+        throw new Error('Please enter a primary keyword/tag');
+      }
       
       // Get suggestions from OpenRouter
       const suggestions = await fetchSuggestions(pageData);
@@ -1006,7 +1031,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function fetchSuggestions(pageData) {
-    const apiKey = "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";
+    const apiKey = "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";
     const baseUrl = "https://openrouter.ai/api/v1/chat/completions";
     const model = "openai/gpt-4o";
     
@@ -1026,38 +1051,37 @@ document.addEventListener('DOMContentLoaded', function() {
           messages: [
             {
               role: "system",
-              content: `You are an expert SEO consultant for Cadabams SEO Tool. Your job is to analyze webpage data and provide comprehensive, actionable SEO recommendations.
+              content: `You are an expert SEO consultant for Cadabams SEO Tool. Your job is to analyze webpage data and provide comprehensive, actionable SEO recommendations based on specific keywords/tags provided by the user.
 
 Provide a thorough SEO analysis that includes:
 
-1. Overall SEO Score (on a scale of 1-100)
-2. Technical SEO Assessment
-   - Issues with status codes, robots.txt, canonical tags
-   - Page loading speed concerns
-   - Mobile-friendliness indicators
-   - Schema markup opportunities
+1. Overall SEO Score (on a scale of 1-100) with regard to the target keywords
+2. Keyword Alignment Assessment
+   - How well the primary and secondary keywords are integrated into the content
+   - Keyword density analysis
+   - Semantic relevance of content to target keywords
+   - Missing keyword opportunities
 
-3. Content Analysis
-   - Primary keyword identification and suggestions based on the URL and content
-   - Secondary/related keywords recommendations (at least 5)
-   - Content quality assessment (length, depth, uniqueness)
-   - Content structure evaluation (headings, paragraphs, bullet points)
+3. Technical SEO Assessment
+   - Issues with status codes, robots.txt, canonical tags
+   - Schema markup opportunities for the target keywords
 
 4. On-page SEO Elements
-   - Title tag optimization (include specific examples)
-   - Meta description improvements (include specific examples)
-   - H1, H2 heading structure recommendations (include specific examples)
-   - URL structure assessment
-   - Internal linking opportunities
+   - Title tag optimization with the target keywords (include specific examples)
+   - Meta description improvements with the target keywords (include specific examples)
+   - H1, H2 heading structure recommendations incorporating keywords (include specific examples)
+   - URL structure assessment for keyword presence
+   - Internal linking opportunities related to the keywords
 
-5. User Experience Factors
-   - Readability assessment
-   - Content engagement potential
-   - Call-to-action effectiveness
+5. Content Analysis
+   - Content quality assessment (length, depth, relevance to keywords)
+   - Content structure evaluation (headings, paragraphs)
+   - Content gap analysis related to the keywords
+   - Additional related keywords recommendations (at least 5)
 
 6. Specific Implementation Examples
-   - Provide code examples for title, meta description, headings
-   - Suggest content improvements with before/after examples
+   - Before/After examples for title, meta descriptions, headings with keywords properly integrated
+   - Content improvement suggestions with the keywords naturally incorporated
    
 Format your response in HTML for direct display in the UI, using semantic HTML tags. Use h3 for section titles, ul/li for lists, and div with class="ai-helper-example" for code examples.`
             },
@@ -1066,7 +1090,10 @@ Format your response in HTML for direct display in the UI, using semantic HTML t
               content: `Here is the SEO data for a webpage:
 ${JSON.stringify(pageData, null, 2)}
 
-Based on this data, please provide a comprehensive SEO analysis with specific recommendations as outlined in your instructions. Include examples of improved title tags, meta descriptions, and H1 headings that incorporate the suggested primary and secondary keywords. Make your suggestions specific, actionable, and relevant to this particular page.`
+Primary Keyword/Tag: ${pageData.primaryTag}
+Secondary Keyword/Tag: ${pageData.secondaryTag || "(Not specified)"}
+
+Based on this data, please provide a comprehensive SEO analysis with specific recommendations focused on optimizing the page for these keywords. Include examples of improved title tags, meta descriptions, and H1 headings that incorporate the primary and secondary keywords. Make your suggestions specific, actionable, and relevant to this particular page.`
             }
           ]
         })
