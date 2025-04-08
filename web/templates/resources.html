@@ -136,44 +136,28 @@
 		<div class="box box-highlight">
 			<div class="col col-main">
 				<div class="content">
-					<h3 style="color: #1c75bc; margin-top: 0; margin-bottom: 10px;">AI SEO Analysis</h3>
+					<h3 style="color: #1c75bc; margin-top: 0; margin-bottom: 10px;">Ultimate SEO Analysis</h3>
+					<p>Get a complete SEO analysis covering keywords, technical issues, content structure, featured snippets, and FAQ recommendations.</p>
 					
-					<!-- Keyword-Based Analysis Section -->
-					<div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #ccc;">
-						<h4 style="color: #1c75bc; margin-bottom: 10px;">Keyword Optimization Analysis</h4>
-						<p>Get keyword-focused SEO recommendations to improve this page's performance.</p>
-						
-						<div style="margin-bottom: 15px;">
-							<div style="margin-bottom: 10px;">
-								<label for="primary-tag" style="display: block; margin-bottom: 5px; font-weight: bold;">Primary Keyword/Tag:</label>
-								<input type="text" id="primary-tag" placeholder="Enter primary keyword" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-							</div>
-							
-							<div style="margin-bottom: 10px;">
-								<label for="secondary-tag" style="display: block; margin-bottom: 5px; font-weight: bold;">Secondary Keyword/Tag:</label>
-								<input type="text" id="secondary-tag" placeholder="Enter secondary keyword" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-							</div>
+					<div style="margin-bottom: 15px;">
+						<div style="margin-bottom: 10px;">
+							<label for="primary-tag" style="display: block; margin-bottom: 5px; font-weight: bold;">Primary Keyword/Tag:</label>
+							<input type="text" id="primary-tag" placeholder="Enter primary keyword" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
 						</div>
 						
-						<button id="get-keyword-suggestions" style="background-color: #1c75bc; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-							Generate Keyword Optimization
-						</button>
+						<div style="margin-bottom: 10px;">
+							<label for="secondary-tag" style="display: block; margin-bottom: 5px; font-weight: bold;">Secondary Keyword/Tag:</label>
+							<input type="text" id="secondary-tag" placeholder="Enter secondary keyword" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+						</div>
 					</div>
 					
-					<!-- Issue-Based Analysis Section -->
-					<div style="margin-bottom: 20px;">
-						<h4 style="color: #1c75bc; margin-bottom: 10px;">Issues & Technical SEO Analysis</h4>
-						<p>Get detailed recommendations for fixing all detected SEO issues on this page.</p>
-						
-						<button id="get-issues-suggestions" style="background-color: #8dc63f; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-							Generate Issues Analysis
-						</button>
-					</div>
+					<button id="get-seo-analysis" style="background-color: #1c75bc; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+						Generate Ultimate SEO Analysis
+					</button>
 					
-					<!-- Common loading and results areas -->
 					<div id="ai-suggestions-loading" style="display: none; margin-top: 15px; align-items: center;">
 						<div style="width: 20px; height: 20px; border: 3px solid rgba(28, 117, 188, 0.2); border-top: 3px solid #1c75bc; border-radius: 50%; animation: ai-spinner 1s linear infinite; margin-right: 10px;"></div>
-						<span>Analyzing page and generating suggestions...</span>
+						<span>Analyzing page and generating comprehensive recommendations...</span>
 					</div>
 					
 					<div id="ai-suggestions-content" style="display: none; margin-top: 15px; padding: 15px; background-color: #f7f7f7; border-left: 4px solid #8dc63f; border-radius: 0 4px 4px 0;"></div>
@@ -211,6 +195,100 @@
 				background-color: #fde2e2;
 				border-left: 3px solid #e74c3c;
 			}
+			.seo-score {
+                background-color: #f9f9f9;
+                border-radius: 8px;
+                padding: 15px;
+                margin-bottom: 20px;
+                border: 1px solid #ddd;
+                display: flex;
+                align-items: center;
+            }
+            .score-circle {
+                width: 80px;
+                height: 80px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                font-weight: bold;
+                color: white;
+                margin-right: 20px;
+            }
+            .score-details {
+                flex: 1;
+            }
+            .score-details h4 {
+                margin-top: 0;
+                margin-bottom: 5px;
+            }
+            .score-details p {
+                margin: 0;
+            }
+            .good {
+                background-color: #4caf50;
+            }
+            .medium {
+                background-color: #ff9800;
+            }
+            .poor {
+                background-color: #f44336;
+            }
+            .improvement-section {
+                margin-bottom: 25px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #eee;
+            }
+            .faq-suggestion {
+                background-color: #f0f7ff;
+                padding: 15px;
+                border-radius: 8px;
+                margin: 15px 0;
+                border-left: 3px solid #1c75bc;
+            }
+            .featured-snippet {
+                background-color: #f7fcf5;
+                padding: 15px;
+                border-radius: 8px;
+                margin: 15px 0;
+                border-left: 3px solid #4caf50;
+            }
+            .keyword-highlight {
+                background-color: #ffeeba;
+                padding: 0 3px;
+                border-radius: 3px;
+            }
+            .anchor-suggestion {
+                background-color: #e8f4fd;
+                padding: 10px;
+                border-radius: 6px;
+                margin: 10px 0;
+            }
+            table.seo-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 15px 0;
+            }
+            table.seo-table th, 
+            table.seo-table td {
+                padding: 8px;
+                border: 1px solid #ddd;
+                text-align: left;
+            }
+            table.seo-table th {
+                background-color: #f2f2f2;
+            }
+            table.seo-table tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .structured-example {
+                background-color: #f9f9ff;
+                padding: 15px;
+                border-radius: 8px;
+                margin: 15px 0;
+                border-left: 3px solid #6c7ae0;
+            }
 		</style>
 
 		{{ $errorTypes := .PageReportView.ErrorTypes }}
@@ -690,7 +768,6 @@
 			</div>
 		</div>
 	{{ end }}
-
 	{{ if eq .Tab "external" }}
 		<div class="box box-highlight">
 			<div class="col col-main">
@@ -889,28 +966,19 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const keywordSuggestionsButton = document.getElementById('get-keyword-suggestions');
-  const issuesSuggestionsButton = document.getElementById('get-issues-suggestions');
+  const analysisButton = document.getElementById('get-seo-analysis');
   const loadingElement = document.getElementById('ai-suggestions-loading');
   const contentElement = document.getElementById('ai-suggestions-content');
   const primaryTagInput = document.getElementById('primary-tag');
   const secondaryTagInput = document.getElementById('secondary-tag');
   
-  // Set up event listeners for both buttons
-  if (keywordSuggestionsButton) {
-    keywordSuggestionsButton.addEventListener('click', function() {
-      handleKeywordAnalysis();
+  if (analysisButton) {
+    analysisButton.addEventListener('click', function() {
+      handleSEOAnalysis();
     });
   }
   
-  if (issuesSuggestionsButton) {
-    issuesSuggestionsButton.addEventListener('click', function() {
-      handleIssuesAnalysis();
-    });
-  }
-  
-  // Function to handle keyword-based analysis
-  async function handleKeywordAnalysis() {
+  async function handleSEOAnalysis() {
     try {
       // Show loading indicator
       loadingElement.style.display = 'flex';
@@ -923,57 +991,24 @@ document.addEventListener('DOMContentLoaded', function() {
       pageData.primaryTag = primaryTagInput.value.trim();
       pageData.secondaryTag = secondaryTagInput.value.trim();
       
-      console.log("Collected page data for keyword analysis:", pageData);
-      
       // Validate inputs
       if (!pageData.primaryTag) {
         throw new Error('Please enter a primary keyword/tag');
       }
       
-      // Get keyword-focused suggestions from Gemini API
-      const suggestions = await fetchKeywordSuggestions(pageData);
+      console.log("Collected page data:", pageData);
       
-      // Display suggestions
-      contentElement.innerHTML = suggestions;
+      // Get comprehensive SEO analysis from Gemini API
+      const analysisResults = await fetchSEOAnalysis(pageData);
+      
+      // Display results
+      contentElement.innerHTML = analysisResults;
       contentElement.style.display = 'block';
     } catch (error) {
-      console.error('Error getting keyword suggestions:', error);
+      console.error('Error getting SEO analysis:', error);
       contentElement.innerHTML = `
         <div class="ai-helper-error">
-          <h3>Error getting keyword suggestions</h3>
-          <p>${error.message || 'An unexpected error occurred.'}</p>
-          <p>Please try again later.</p>
-        </div>
-      `;
-      contentElement.style.display = 'block';
-    } finally {
-      // Hide loading indicator
-      loadingElement.style.display = 'none';
-    }
-  }
-  
-  // Function to handle issues-based analysis
-  async function handleIssuesAnalysis() {
-    try {
-      // Show loading indicator
-      loadingElement.style.display = 'flex';
-      contentElement.style.display = 'none';
-      
-      // Collect page data
-      const pageData = collectPageData();
-      console.log("Collected page data for issues analysis:", pageData);
-      
-      // Get issues-focused suggestions from Gemini API
-      const suggestions = await fetchIssuesSuggestions(pageData);
-      
-      // Display suggestions
-      contentElement.innerHTML = suggestions;
-      contentElement.style.display = 'block';
-    } catch (error) {
-      console.error('Error getting issues suggestions:', error);
-      contentElement.innerHTML = `
-        <div class="ai-helper-error">
-          <h3>Error getting issues suggestions</h3>
+          <h3>Error getting SEO analysis</h3>
           <p>${error.message || 'An unexpected error occurred.'}</p>
           <p>Please try again later.</p>
         </div>
@@ -997,7 +1032,10 @@ document.addEventListener('DOMContentLoaded', function() {
       statusCode: '',
       contentType: '',
       wordCount: '',
-      issues: []
+      issues: [],
+      internalLinks: [],
+      externalLinks: [],
+      images: []
     };
     
     // Get URL and title from the URL element
@@ -1085,57 +1123,104 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     pageData.issues = issuesList;
+    
+    // Try to collect internal and external links
+    try {
+      // Check if we're on the internal links tab
+      const internalLinksTab = document.querySelector('.box-highlight .content');
+      if (internalLinksTab && internalLinksTab.textContent.includes('Internal links are the links found')) {
+        const linkBoxes = document.querySelectorAll('.box .col-main .content a.url');
+        linkBoxes.forEach(link => {
+          const linkText = link.parentElement.textContent.split('\n')[0].trim();
+          const linkUrl = link.textContent.trim();
+          pageData.internalLinks.push({ text: linkText, url: linkUrl });
+        });
+      }
+      
+      // Check if we're on the external links tab
+      const externalLinksTab = document.querySelector('.box-highlight .content');
+      if (externalLinksTab && externalLinksTab.textContent.includes('External links are the links found')) {
+        const linkBoxes = document.querySelectorAll('.box .col-main .content .url');
+        linkBoxes.forEach(link => {
+          const linkText = link.parentElement.textContent.split('\n')[0].trim();
+          const linkUrl = link.textContent.trim();
+          pageData.externalLinks.push({ text: linkText, url: linkUrl });
+        });
+      }
+      
+      // Check if we're on the images tab
+      const imagesTab = document.querySelector('.box-highlight .content');
+      if (imagesTab && imagesTab.textContent.includes('Images that are found in this URL')) {
+        const imageBoxes = document.querySelectorAll('.box .col-main .content .url');
+        imageBoxes.forEach(img => {
+          const altText = img.parentElement.textContent.split('\n')[0].trim();
+          const imgUrl = img.textContent.trim();
+          const hasAlt = !img.parentElement.textContent.includes('No alt attribute');
+          pageData.images.push({ alt: hasAlt ? altText : '', url: imgUrl });
+        });
+      }
+    } catch (e) {
+      console.error('Error collecting additional page data:', e);
+    }
+    
     return pageData;
   }
 
-  // Function to get keyword-focused suggestions from Gemini API
-  async function fetchKeywordSuggestions(pageData) {
+  async function fetchSEOAnalysis(pageData) {
     // Google Gemini API Key and endpoint
     const apiKey = "AIzaSyD0H3DOuV_SeKMUnxOAY85e9l2c_OCk6o4";
-    const baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+    const baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-preview-03-25:generateContent";
     
     try {
-      console.log("Sending keyword analysis request to Gemini API...");
+      console.log("Sending comprehensive analysis request to Gemini API...");
       
-      // Create the prompt for keyword analysis
-      const systemPrompt = `You are an expert SEO consultant focusing on keyword optimization. Your job is to analyze webpage data and provide comprehensive, actionable SEO recommendations for optimizing the page for specific target keywords.
+      // Create a comprehensive prompt for the Gemini API
+      const systemPrompt = `You are an expert SEO consultant. Your job is to analyze webpage data and provide a comprehensive, actionable SEO analysis that addresses EVERY point in this list:
 
-Provide a thorough keyword optimization analysis that includes:
+1. Keyword Usage Analysis:
+   - Check if the primary keyword is present in the Title, Meta Description, and H1.
+   - If any of these are missing the primary keyword, suggest new versions that include it.
+   - If any of these elements are missing entirely, provide complete suggestions that incorporate both primary and secondary keywords.
+   - Analyze keyword density - check if primary keyword density is between 5-7%, and if less, suggest specific places to improve it.
 
-1. Overall Keyword Optimization Score (on a scale of 1-100)
+2. Element Length & Duplication Check:
+   - Check if the Title is less than 60 characters (flag if too long).
+   - Check if the Meta Description is less than 160 characters (flag if too long).
+   - Check if Title and H1 are duplicates; if so, suggest a different H1 that still contains the primary keyword.
 
-2. Keyword Presence Analysis
-   - How well the primary and secondary keywords are integrated into the title, meta description, headings, and content
-   - Keyword density analysis and recommendations (aim for natural inclusion, not keyword stuffing)
-   - Semantic relevance of content to target keywords
-   - Missing keyword opportunities in key page elements
+3. Secondary Keyword Analysis:
+   - Check if secondary keywords appear in content and sub-headings (H2, H3, H4, etc.).
+   - If secondary keywords are missing, suggest specific places to add them within the existing content.
 
-3. Title Tag Optimization
-   - Current title tag analysis regarding the target keywords
-   - Specific recommendations for optimizing the title with the target keywords
-   - Before/After examples of improved title tags
+4. Semantic & Related Keywords:
+   - Check if semantic/related keywords based on the primary and secondary keywords are present in the content.
+   - If missing, suggest where to incorporate them in existing content or propose new content sections.
 
-4. Meta Description Optimization
-   - Current meta description analysis regarding the target keywords
-   - Specific recommendations for incorporating keywords naturally
-   - Before/After examples of improved meta descriptions
+5. Content Structure Analysis:
+   - Evaluate if the page is skimmable yet comprehensive.
+   - Check if the page includes structured content types (tables, lists, summaries, FAQs).
+   - Suggest specific improvements to content structure with examples.
 
-5. Heading Structure Optimization
-   - H1 and H2 analysis for keyword inclusion
-   - Recommendations for optimizing heading structure with keywords
-   - Before/After examples of improved headings
+6. Featured Snippet Optimization:
+   - Analyze if the content is optimized for Google featured snippets.
+   - Check if it has clear, concise content that directly answers user queries (40-50 words).
+   - Suggest specific featured snippet opportunities with example content.
 
-6. Content Optimization
-   - Content analysis for keyword relevance and coverage
-   - Recommendations for better keyword inclusion in content
-   - Suggestions for additional content topics related to the keywords
-   - At least 5 related keywords/phrases to target
+7. Anchor Text Analysis:
+   - Check if the content has anchor text links.
+   - If present, analyze the keywords used in anchor text.
+   - If missing or poorly optimized, suggest relevant anchor text that could be used to link from this content.
 
-7. Implementation Examples
-   - Specific HTML examples for optimized title, meta description, and headings
-   - Content improvement suggestions with keywords naturally incorporated
-   
-Format your response in HTML for direct display in the UI, using semantic HTML tags. Use h3 for section titles, ul/li for lists, and div with class="ai-helper-example" for code examples.`;
+8. FAQ Recommendations:
+   - Check if FAQs include the primary keyword in questions and answers.
+   - Check if any questions have secondary keywords in questions/answers.
+   - Suggest 3-5 new relevant FAQs based on the primary and secondary keywords.
+
+9. Technical SEO Issues:
+   - Identify and provide fixes for all technical SEO issues.
+   - Provide implementation examples for fixing critical issues.
+
+Format your response in HTML for direct display in the UI. Use heading tags, lists, tables, and styled sections to make your analysis clear and actionable. Include examples for all recommendations.`;
 
       const userPrompt = `Here is the SEO data for a webpage:
 ${JSON.stringify(pageData, null, 2)}
@@ -1143,130 +1228,16 @@ ${JSON.stringify(pageData, null, 2)}
 Primary Keyword/Tag: ${pageData.primaryTag}
 Secondary Keyword/Tag: ${pageData.secondaryTag || "(Not specified)"}
 
-Based on this data, please provide a comprehensive keyword optimization analysis focused specifically on how well the page is optimized for these keywords. Include specific recommendations and examples for better incorporating these keywords into the page.
+Based on this data, please provide a comprehensive SEO analysis covering ALL of the points specified. Make your suggestions specific, actionable, and relevant to this particular page.
 
-Make your suggestions specific, actionable, and relevant to this particular page.`;
+Include actual HTML and content examples that could be implemented, especially for:
+1. Optimized title, meta description, and headings
+2. Featured snippet optimization
+3. Recommended FAQ structure
+4. Anchor text suggestions
+5. Content structure improvements
 
-      // Make the API request to Gemini
-      const response = await fetch(`${baseUrl}?key=${apiKey}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: systemPrompt },
-                { text: userPrompt }
-              ]
-            }
-          ],
-          generationConfig: {
-            temperature: 0.2,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 8192,
-          }
-        })
-      });
-      
-      console.log("Keyword analysis response received:", response.status);
-      
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      console.log("Gemini API keyword analysis response:", data);
-      
-      // Extract the text from Gemini response
-      if (data.candidates && data.candidates.length > 0 && 
-          data.candidates[0].content && 
-          data.candidates[0].content.parts && 
-          data.candidates[0].content.parts.length > 0) {
-        return data.candidates[0].content.parts[0].text;
-      } else {
-        throw new Error('Invalid response format from Gemini API');
-      }
-      
-    } catch (error) {
-      console.error('Error fetching keyword suggestions from Gemini API:', error);
-      throw error;
-    }
-  }
-
-  // Function to get issues-focused suggestions from Gemini API
-  async function fetchIssuesSuggestions(pageData) {
-    // Google Gemini API Key and endpoint
-    const apiKey = "AIzaSyD0H3DOuV_SeKMUnxOAY85e9l2c_OCk6o4";
-    const baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-    
-    try {
-      console.log("Sending issues analysis request to Gemini API...");
-      
-      // Create the prompt for issues analysis
-      const systemPrompt = `You are an expert SEO consultant focusing on fixing technical SEO issues. Your job is to analyze webpage data and provide comprehensive, actionable recommendations for addressing specific SEO issues detected on the page.
-
-Provide a thorough SEO issues analysis that includes:
-
-1. Overall Technical SEO Score (on a scale of 1-100)
-
-2. Critical Issues Analysis
-   - Detailed explanation of each identified issue and its SEO impact
-   - Prioritized list of issues from most to least critical
-   - Specific technical fixes for each issue
-
-3. Title and Meta Description Issues
-   - Analysis of title length, uniqueness, and relevance problems
-   - Analysis of meta description length, uniqueness, and relevance problems
-   - Specific recommendations with before/after examples
-
-4. Heading Structure Issues
-   - Analysis of heading hierarchy problems (e.g., skipping heading levels)
-   - Recommendations for proper heading structure
-   - Before/after examples showing improved heading structure
-
-5. Image Optimization Issues
-   - Analysis of missing alt attributes, width/height attributes
-   - Recommendations for image optimization
-   - HTML examples of properly optimized image tags
-
-6. Link Issues
-   - Analysis of external follow links that should be nofollow
-   - Recommendations for proper link handling
-   - HTML examples of properly optimized links
-
-7. Technical SEO Fixes
-   - Recommendations for implementing content security policy
-   - Fixing any other technical issues identified
-   - Code examples for implementation
-
-8. Implementation Examples
-   - At least 4-5 specific code/HTML implementation examples
-   - Before/after comparisons showing how to fix each issue
-   - Step-by-step instructions for implementation
-
-Format your response in HTML for direct display in the UI, using semantic HTML tags. Use h3 for section titles, ul/li for lists, and div with class="ai-helper-example" for code examples.`;
-
-      const userPrompt = `Here is the SEO data for a webpage:
-${JSON.stringify(pageData, null, 2)}
-
-The page has the following SEO issues that need to be fixed:
-${pageData.issues.length > 0 ? pageData.issues.map(issue => '- ' + issue).join('\n') : '- No specific issues detected'}
-
-Additional issues may include:
-- Long title (${pageData.title ? pageData.title.length : 'N/A'} characters)
-- Long description (${pageData.description ? pageData.description.length : 'N/A'} characters)
-- External follow links
-- Images missing alt attributes
-- Images missing size attributes (width/height)
-- Invalid heading order
-- Missing content security policy
-
-Based on this data, please provide a comprehensive analysis of all SEO issues with specific recommendations for fixing each issue. Include at least 4-5 implementation examples with before/after code comparisons.
-
-Make your suggestions specific, actionable, and relevant to this particular page.`;
+Do not skip ANY of the analysis points - each must be addressed thoroughly.`;
 
       // Make the API request to Gemini
       const response = await fetch(`${baseUrl}?key=${apiKey}`, {
@@ -1285,21 +1256,21 @@ Make your suggestions specific, actionable, and relevant to this particular page
           ],
           generationConfig: {
             temperature: 0.2,
-            topK: 40,
+            topK: 32,
             topP: 0.95,
-            maxOutputTokens: 8192,
+            maxOutputTokens: 16384,
           }
         })
       });
       
-      console.log("Issues analysis response received:", response.status);
+      console.log("SEO analysis response received:", response.status);
       
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }
       
       const data = await response.json();
-      console.log("Gemini API issues analysis response:", data);
+      console.log("Gemini API comprehensive analysis response:", data);
       
       // Extract the text from Gemini response
       if (data.candidates && data.candidates.length > 0 && 
@@ -1312,7 +1283,7 @@ Make your suggestions specific, actionable, and relevant to this particular page
       }
       
     } catch (error) {
-      console.error('Error fetching issues suggestions from Gemini API:', error);
+      console.error('Error fetching from Gemini API:', error);
       throw error;
     }
   }
